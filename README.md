@@ -1,5 +1,6 @@
 # 🔍 ClassCard-Test-Hint
 [![방문자수   ](https://myhits.vercel.app/api/hit/https%3A%2F%2Fgithub.com%2FRung2ne%2FClassCard-Test-Hint?color=green&label=%EB%B0%A9%EB%AC%B8%EC%9E%90%EC%88%98+++&size=small)](https://myhits.vercel.app)<br/>
+![2026](https://img.shields.io/badge/2026-43B02A?style=for-the-badge&logo=2026&logoColor=white)<br/>
 ![Environment](https://img.shields.io/badge/ENV-ff0000?style=for-the-badge&logo=ENV&logoColor=white)
 ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0079d5.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)<br/>
 ![Language](https://img.shields.io/badge/LAN-ff0000?style=for-the-badge&logo=LAN&logoColor=white) ![Python](https://img.shields.io/badge/python-0079d5?style=for-the-badge&logo=python&logoColor=ffdd54)![uv](https://img.shields.io/badge/uv-%230079d5.svg?style=for-the-badge&logo=uv&logoColor=white)<br/>
