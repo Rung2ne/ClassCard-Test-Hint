@@ -91,23 +91,29 @@ def choice_mode(driver) -> list:
 
     os.system("cls" if os.name == "nt" else "clear")
     print("[0] 뒤로가기")
-    print("[1] 암기")
-    print("[2] 리콜")
-    print("[3] 스펠")
-    print(f"[4] 자동  ({auto_label})")
-    print("[5] 테스트")
-
+    print("[1] 암기 진행하기")
+    print("[2] 리콜 진행하기")
+    print("[3] 스펠 진행하기")
+    print("[4] 필수모드 자동으로 진행하기")
+    print("[5] 테스트 진행하기")
+    
     while True:
         try:
             ch_m = input(">>> ").strip()
-            if   ch_m == "0": return []
-            elif ch_m == "1": return ["memorize"]
-            elif ch_m == "2": return ["recall"]
-            elif ch_m == "3": return ["spell"]
-            elif ch_m == "4": return required_learning_modes
-            elif ch_m == "5": return ["test"]
+            if ch_m == "0":
+                return []
+            elif ch_m == "1":
+                return ["memorize"]
+            elif ch_m == "2":
+                return ["recall"]
+            elif ch_m == "3":
+                return ["spell"]
+            elif ch_m == "4":
+                return required_learning_modes
+            elif ch_m == "5":
+                return ["test"]
             else:
-                print("0~5 중 하나를 입력하세요.")
+                print("0~5 중에서 하나를 입력하세요.")
         except KeyboardInterrupt:
             quit()
 
@@ -583,17 +589,18 @@ def main():
             selected_class_id = None
             selected_set_id = None
             
-            while True:
-                # 클래스 선택
-                if len(class_dict) == 1:
-                    idx_c = 0
-                else:
-                    idx_c = choice_class(class_dict)
-                    if idx_c is None:
-                        print("프로그램을 종료합니다.")
-                        return
-                
-                selected_class_id = class_dict[idx_c]["class_id"]
+            # 클래스 선택
+            if len(class_dict) == 1:
+                idx_c = 0
+            else:
+                idx_c = choice_class(class_dict)
+                if idx_c is None:
+                    print("프로그램을 종료합니다.")
+                    return
+            
+            selected_class_id = class_dict[idx_c]["class_id"]
+            
+            while True:  # 세트 선택 루프
                 driver.get(f"https://www.classcard.net/ClassMain/{selected_class_id}")
                 
                 # 클래스 페이지 로딩 대기
@@ -621,60 +628,61 @@ def main():
                 idx_s = choice_set(sets_dict)
                 if idx_s is None: # 뒤로가기
                     driver.get("https://www.classcard.net/Home")
-                    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".left-class-list")))
-                    continue
-                
-                selected_set_id = sets_dict[idx_s]["set_id"]
-                break
-    
-            # 6. 세트 페이지로 이동 (사용자가 모드를 고를 때 이 페이지가 켜져 있어야 함)
-            set_site = f"https://www.classcard.net/set/{selected_set_id}/{selected_class_id}"
-            driver.get(set_site)
-    
-            # 7. 단어 추출
-            two_way_dict = fetch_words(driver, selected_class_id, selected_set_id)
-            
-            # 8. 모드 선택 (루프)
-            while True:
-                # 이전 진행의 결과로 다른 페이지에 있을 경우, 세트 메인 페이지로 초기화
-                if driver.current_url != set_site:
-                    driver.get(set_site)
                     try:
-                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".set-body")))
+                        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".left-class-list")))
                     except Exception:
                         pass
-                        
-                modes_to_run = choice_mode(driver)
+                    break  # 클래스 선택 루프로 돌아가기
                 
-                # 뒤로 가기를 선택한 경우 (빈 리스트 반환) 상위 클래스/세트 선택 루프로 돌아가기
-                if not modes_to_run:
-                    driver.get("https://www.classcard.net/Home")
-                    break
+                selected_set_id = sets_dict[idx_s]["set_id"]
+    
+                # 6. 세트 페이지로 이동 (사용자가 모드를 고를 때 이 페이지가 켜져 있어야 함)
+                set_site = f"https://www.classcard.net/set/{selected_set_id}/{selected_class_id}"
+                driver.get(set_site)
+        
+                # 7. 단어 추출
+                two_way_dict = fetch_words(driver, selected_class_id, selected_set_id)
                 
-                # 9. 선택된 모드들 순차적으로 진행
-                for mode in modes_to_run:
-                    # 다음 모드를 시작하기 전에 항상 세트 메인 페이지로 돌아온 상태인지 확인
+                # 8. 모드 선택 (루프)
+                while True:
+                    # 이전 진행의 결과로 다른 페이지에 있을 경우, 세트 메인 페이지로 초기화
                     if driver.current_url != set_site:
                         driver.get(set_site)
                         try:
                             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".set-body")))
-                            time.sleep(1)
                         except Exception:
                             pass
+                            
+                    modes_to_run = choice_mode(driver)
                     
-                    success = False
-                    if mode == "test":
-                        success = start_test_ui(driver)
-                    else:
-                        success = start_learning_mode(driver, mode)
+                    # 뒤로 가기를 선택한 경우 (빈 리스트 반환) 세트 선택 루프로 돌아가기
+                    if not modes_to_run:
+                        break
+                    
+                    # 9. 선택된 모드들 순차적으로 진행
+                    for mode in modes_to_run:
+                        # 다음 모드를 시작하기 전에 항상 세트 메인 페이지로 돌아온 상태인지 확인
+                        if driver.current_url != set_site:
+                            driver.get(set_site)
+                            try:
+                                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".set-body")))
+                                time.sleep(1)
+                            except Exception:
+                                pass
                         
-                    if success:
-                        run_hint_loop(driver, two_way_dict, mode)
-                        print(f"\n[{mode}] 모드가 종료되었습니다. 다음 단계로 넘어갑니다.")
-                        time.sleep(1)
-                
-                print("\n선택하신 모든 작업이 완료되었습니다. 메뉴로 돌아갑니다.")
-                time.sleep(1.5)
+                        success = False
+                        if mode == "test":
+                            success = start_test_ui(driver)
+                        else:
+                            success = start_learning_mode(driver, mode)
+                            
+                        if success:
+                            run_hint_loop(driver, two_way_dict, mode)
+                            print(f"\n[{mode}] 모드가 종료되었습니다. 다음 단계로 넘어갑니다.")
+                            time.sleep(1)
+                    
+                    print("\n선택하신 모든 작업이 완료되었습니다. 메뉴로 돌아갑니다.")
+                    time.sleep(1.5)
 
     finally:
         print("브라우저를 종료하려면 엔터를 누르세요...")
