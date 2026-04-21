@@ -64,60 +64,31 @@ def choice_class(class_dict: dict) -> int | None:
 
 
 def choice_mode(driver) -> list:
-    """학습 모드 선택 (자율인 모드 제외하고 동적 파싱)."""
-    os.system("cls" if os.name == "nt" else "clear")
-    print("학습 모드 확인 중...")
-    
-    # 지원하는 기본 모드 매핑
-    mode_mapping = {
-        "암기": "memorize",
-        "리콜": "recall",
-        "스펠": "spell",
-        "테스트": "test"
-    }
-    
+    mode_mapping = {"암기": "memorize", "리콜": "recall", "스펠": "spell"}
+    label_ko = {"memorize": "암기", "recall": "리콜", "spell": "스펠"}
+
     required_learning_modes = []
-    
     try:
         wait = WebDriverWait(driver, 5)
-        # 하단 메뉴 로딩 대기
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bottom-fixed .btn-summary")))
-        
-        btn_summaries = driver.find_elements(By.CSS_SELECTOR, ".bottom-fixed .btn-summary")
-        for btn in btn_summaries:
+        for btn in driver.find_elements(By.CSS_SELECTOR, ".bottom-fixed .btn-summary"):
             text_lines = btn.text.strip().split('\n')
             if not text_lines:
                 continue
-                
             mode_name = text_lines[0].strip()
-            # 지원하지 않는 모드면 패스
             if mode_name not in mode_mapping:
                 continue
-                
-            # 테스트 모드는 별도 메뉴로 빼기 위해 여기서 필터링
-            if mode_name == "테스트":
-                continue
-                
-            # '자율' 이라는 문구가 있는지 확인
-            is_optional = False
-            for line in text_lines[1:]:
-                if "(자율)" in line:
-                    is_optional = True
-                    break
-            
-            # 자율이 아닐 경우에만 필수 모드에 추가
+            is_optional = any("(자율)" in line for line in text_lines[1:])
             if not is_optional:
                 required_learning_modes.append(mode_mapping[mode_name])
-                
     except Exception as e:
         print(f"모드 상태 불러오기 실패: {e}")
-        # 오류 시 기본 필수 모드 구성
-        required_learning_modes = ["memorize", "recall", "spell"]
-    
-    # 만약 필수 모드가 하나도 잡히지 않았다면 기본 설정
+
     if not required_learning_modes:
-        required_learning_modes = ["memorize", "recall"]
-            
+        required_learning_modes = ["memorize", "recall", "spell"]
+
+    auto_label = ", ".join(label_ko.get(m, m) for m in required_learning_modes)
+
     os.system("cls" if os.name == "nt" else "clear")
     print("[0] 뒤로가기")
     print("[1] 암기 진행하기")
@@ -145,7 +116,6 @@ def choice_mode(driver) -> list:
                 print("0~5 중에서 하나를 입력하세요.")
         except KeyboardInterrupt:
             quit()
-
 
 def check_id(id: str, pw: str) -> bool:
     print("계정 정보 확인 중")

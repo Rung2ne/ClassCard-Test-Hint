@@ -16,28 +16,29 @@
 * 파이썬(Python)이 설치되어 있어야 합니다.
 * **구글 크롬(Google Chrome) 브라우저가 반드시 설치되어 있어야 합니다.**
 
+[Chrome](https://www.google.com/intl/ko_kr/chrome/)
+[Python](https://www.python.org/downloads/release/python-3144/)
+
 ## 🚀 사용 방법
 
 1. 본 리포지토리의 파일들을 다운로드합니다.
 2. 터미널(또는 명령 프롬프트)을 열고 필수 라이브러리를 설치합니다.
    ```bash
-   pip install -r requirements.txt
+   Window: pip install -r requirements.txt
    ```
 3. 파이썬 스크립트를 실행합니다.
    ```Bash
-   python main.py
+   Window: python main.py
    ```
 4. 터미널 안내에 따라 클래스카드 **아이디와 비밀번호**를 입력합니다. (초기 1회 한정)
-5. 브라우저가 열리면, 테스트를 진행할 **클래스와 세트**를 선택합니다.
-6. 자동으로 테스트 화면으로 이동하며, **정답 버튼에 연회색 테두리**가 표시됩니다.
 
-## 💡 암기/리콜 학습 추천 프로그램
-> [!WARNING]
-> 아래 링크는 본인이 만든 프로그램이 아니며, 단순 기능 추천입니다. 해당 확장 프로그램을 사용함으로써 발생하는 문제에 대해서도 원작자(본인)는 일체의 책임을 지지 않습니다.
->
-> 테스트가 아닌 암기, 리콜 모드의 자동화가 필요하시다면 아래 크롬 확장 프로그램을 추천합니다.
+5. 브라우저가 열리면, 가입된 클래스 목록이 잠시후에 터미널에 표시됩니다. 원하는 클래스 번호를 입력하세요.
+6. 이후 해당 클래스 내의 학습 세트 목록이 터미널에 표시됩니다. 원하는 세트 번호를 입력하세요.
+7. 세트 진입 후 단어 추출이 완료되면 학습 및 테스트 등의 메뉴가 표시됩니다. 원하는 작업 번호를 입력하여 진행하세요.
 
-- [ClassCard Auto (Chrome 웹스토어)](https://chromewebstore.google.com/detail/classcard-auto/ddhailnbodajnflekpkmkpglocmendfp?pli=1)
+> [!NOTE] 
+> 테스트는 정답 버튼의 색이 달라지며 직접 클릭해야 합니다.
+
 
 ## 📄 라이선스
 본 프로젝트는 **MIT License**를 따릅니다.
