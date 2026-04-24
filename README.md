@@ -14,11 +14,8 @@
 클래스카드 테스트에서 정답을 찾아 연회색 테두리로 표시해주는 파이썬 스크립트입니다.
 
 ## ⚠️ 필수 준비물
-* 파이썬(Python)이 설치되어 있어야 합니다.
-* **구글 크롬(Google Chrome) 브라우저가 반드시 설치되어 있어야 합니다.**
-
-[Chrome](https://www.google.com/intl/ko_kr/chrome/)
-[Python](https://www.python.org/downloads/release/python-3144/)
+* - [ ] ([Python](https://www.python.org/downloads/release/python-3144/))
+* - [ ] ([Google Chrome](https://www.google.com/intl/ko_kr/chrome/))
 
 ## 🚀 사용 방법
 
